@@ -1,0 +1,28 @@
+# ------------------------------------------------------------------------------
+#
+# 22 TCP: SSH
+# 80 TCP: HTTP
+# 443 TCP: nginx port for TCP
+#
+# ------------------------------------------------------------------------------
+
+version: '3.1'
+
+services:
+
+    nginx:
+        image: huioqy/nginx-letsencrypt:1.0.0
+        restart: on-failure
+        network_mode: host
+        volumes:
+            - ./certificates:/etc/letsencrypt
+            - ./owncert:/owncert
+            - ./modified_nginx_conf:/modified_nginx_conf
+        environment:
+            - DOMAIN_OR_PUBLIC_IP=${DOMAIN_OR_PUBLIC_IP}
+            - CERTIFICATE_TYPE=${CERTIFICATE_TYPE}
+            - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+            - PROXY_HTTP_PORT=${HTTP_PORT:-}
+            - PROXY_HTTPS_PORT=${HTTPS_PORT:-}
+            - CONF_MODIFICATION=false
+
